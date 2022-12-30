@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvwlup1ghopa3"]
+
+[ext_resource type="Script" path="res://Server.gd" id="1_8nsbr"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_8nsbr")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Port" type="LineEdit" parent="CenterContainer/Menu"]
+layout_mode = 2
+text = "9999"
+placeholder_text = "Port"
+
+[node name="Max Players" type="LineEdit" parent="CenterContainer/Menu"]
+layout_mode = 2
+text = "10"
+placeholder_text = "Max PLayers"
+
+[node name="Start" type="Button" parent="CenterContainer/Menu"]
+layout_mode = 2
+text = "Start"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Scenes/player_character.tscn")
+spawn_path = NodePath("..")
+
+[connection signal="pressed" from="CenterContainer/Menu/Start" to="." method="_on_start_pressed"]

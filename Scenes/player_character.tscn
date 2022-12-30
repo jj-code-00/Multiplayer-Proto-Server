@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://di1ayvcttld48"]
+
+[node name="Player_Character" type="Node"]
+
+[node name="MultiplayerSynchronizer" type="Node" parent="."]
