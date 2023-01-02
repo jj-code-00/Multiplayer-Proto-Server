@@ -21,13 +21,12 @@ var stats = {
 }
 
 func _process(delta):
-	if client_ready_notify && stats.get("Current Health") <= 0:
-#		Server.kick(str(get_parent().name).to_int())
-		pass
+	if client_ready_notify && stats.get("Current Health") < 0.001:
+		Server.kick(str(get_parent().name).to_int())
 
 func take_damage(strength, attack_direction):
 	stats["Current Health"] = clamp(stats.get("Current Health") - strength,0,stats.get("Max Health"))
-	get_parent().velocity = attack_direction * 300
+	get_parent().velocity = attack_direction * 750
 	get_parent().knock_back = true
 	get_parent().get_node("Timers/Knock Back").start(.2)
 	calc_health_percent()

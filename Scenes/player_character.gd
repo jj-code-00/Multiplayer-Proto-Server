@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 @onready var punch_hurtbox = $"HurtBox/HurtBox Collision Shape"
 @onready var main = get_tree().get_root().get_node("Main")
+@onready var clock = main.get_node("Game Manager").get_node("Clock")
+
 signal player_ready
 
 @export
@@ -19,6 +21,7 @@ func set_client_ready():
 
 func _ready():
 	facing = motion
+	clock.timeout.connect(Callable(self,"second_clock"))
 
 func _process(delta):
 	pass
@@ -50,6 +53,8 @@ func inputs(event):
 					punch_hurtbox.position = Vector2(0,-15)
 			punch_hurtbox.disabled = false
 			$"Timers/Attack CD".start(.2)
+		if event == "i_meditate" && !attacking:
+			pass
 
 func _on_hurt_box_body_entered(body):
 	if body.is_in_group("players") && body.name != self.name:
@@ -63,3 +68,6 @@ func _on_attack_cd_timeout():
 
 func _on_knock_back_timeout():
 	knock_back = false
+
+func second_clock():
+	pass

@@ -5,7 +5,11 @@ signal player_is_ready
 
 @rpc
 func kick(player_id):
-	rpc_id(player_id,"kick")
+	rpc_id(player_id,"kick_client",player_id)
+
+@rpc
+func kick_client(player_id):
+	pass
 
 @rpc(any_peer)
 func request_color_change(target_id, requester_id, color):
@@ -13,7 +17,7 @@ func request_color_change(target_id, requester_id, color):
 	if color == Color.RED:
 		await get_tree().create_timer(.5).timeout
 		rpc_id(target_id,"get_color_change",target_id, requester_id, Color.WHITE)
-	
+
 @rpc
 func get_color_change(target_id, requester_id, color):
 	pass
@@ -46,3 +50,11 @@ func update_GUI_client(target_id, health_percent, ki_percent):
 func client_ready(client_id):
 	connect("player_is_ready",main.get_node(str(client_id)).set_client_ready)
 	emit_signal("player_is_ready")
+
+@rpc(any_peer)
+func get_stats(player_id):
+	rpc_id(str(player_id).to_int(),"receive_stats",str(player_id).to_int(),main.get_node(str(player_id)).get_node("Stats").stats)
+
+@rpc
+func receive_stats(player_id,stats):
+	pass
