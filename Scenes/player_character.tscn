@@ -1,5 +1,42 @@
-[gd_scene format=3 uid="uid://di1ayvcttld48"]
+[gd_scene load_steps=5 format=3 uid="uid://di1ayvcttld48"]
 
-[node name="Player_Character" type="Node"]
+[ext_resource type="Script" path="res://Scenes/player_character.gd" id="1_jeb2b"]
+[ext_resource type="Script" path="res://Scenes/Stats.gd" id="2_5flku"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_itgx1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s6gde"]
+size = Vector2(20, 29)
+
+[node name="Player_Character" type="CharacterBody2D" groups=["players"]]
+motion_mode = 1
+script = ExtResource("1_jeb2b")
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("2_5flku")
 
 [node name="MultiplayerSynchronizer" type="Node" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_itgx1")
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="HurtBox Collision Shape" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_s6gde")
+disabled = true
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="Attack CD" type="Timer" parent="Timers"]
+one_shot = true
+
+[node name="Knock Back" type="Timer" parent="Timers"]
+one_shot = true
+
+[connection signal="player_ready" from="." to="Stats" method="_on_player_character_player_ready"]
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="timeout" from="Timers/Attack CD" to="." method="_on_attack_cd_timeout"]
+[connection signal="timeout" from="Timers/Knock Back" to="." method="_on_knock_back_timeout"]
