@@ -14,6 +14,7 @@ var attacking = false
 var client_ready = false
 var knock_back = false
 var knock_back_vector = Vector2.ZERO
+var can_move = true
 
 func set_client_ready():
 	client_ready = true
@@ -28,7 +29,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	if client_ready:
-		if !knock_back:
+		if !knock_back && can_move:
 			velocity = motion * 250
 		move_and_slide()
 		Server.update_position(str(name),global_position)
@@ -53,8 +54,15 @@ func inputs(event):
 					punch_hurtbox.position = Vector2(0,-15)
 			punch_hurtbox.disabled = false
 			$"Timers/Attack CD".start(.2)
+			# finish this with health and ki regen
 		if event == "i_meditate" && !attacking:
-			pass
+			if can_move:
+				can_move = false
+				velocity = Vector2.ZERO
+				$Stats.meditating = true
+			else:
+				can_move = true
+				$Stats.meditating = false
 
 func _on_hurt_box_body_entered(body):
 	if body.is_in_group("players") && body.name != self.name:
@@ -65,9 +73,9 @@ func _on_attack_cd_timeout():
 	attacking = false
 	punch_hurtbox.disabled = true
 
-
 func _on_knock_back_timeout():
 	knock_back = false
 
 func second_clock():
 	pass
+
